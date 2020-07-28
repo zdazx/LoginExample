@@ -4,8 +4,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
 import io.reactivex.CompletableObserver;
@@ -13,6 +11,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.thoughtworks.loginexample.Utils.convertMD5;
 
 public class CreateViewModel extends ViewModel {
     private MutableLiveData<String> createResult;
@@ -32,7 +32,8 @@ public class CreateViewModel extends ViewModel {
 
     public void autoCreateUser() {
         final String name = "android";
-        User user = new User(name, convertMD5());
+        final String password = "123456";
+        User user = new User(name, convertMD5(password));
 
         userRepository.save(user)
                 .subscribeOn(Schedulers.io())
@@ -56,32 +57,6 @@ public class CreateViewModel extends ViewModel {
                         createResult.setValue(failResult);
                     }
                 });
-    }
-
-    private String convertMD5() {
-        final String MD5 = "MD5";
-        final String initPassword = "123456";
-        try {
-            // Create MD5 Hash
-            MessageDigest digest = java.security.MessageDigest
-                    .getInstance(MD5);
-            digest.update(initPassword.getBytes());
-            byte[] messageDigest = digest.digest();
-
-            // Create Hex String
-            StringBuilder hexString = new StringBuilder();
-            for (byte aMessageDigest : messageDigest) {
-                StringBuilder h = new StringBuilder(Integer.toHexString(0xFF & aMessageDigest));
-                while (h.length() < 2)
-                    h.insert(0, "0");
-                hexString.append(h);
-            }
-            return hexString.toString();
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return initPassword;
     }
 
     @Override
