@@ -78,9 +78,7 @@ public class LoginViewModel extends ViewModel {
 
     @Override
     protected void onCleared() {
-        if (!compositeDisposable.isDisposed()) {
-            compositeDisposable.clear();
-        }
+        compositeDisposable.clear();
         super.onCleared();
     }
 }

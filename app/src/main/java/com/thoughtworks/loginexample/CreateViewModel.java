@@ -61,9 +61,7 @@ public class CreateViewModel extends ViewModel {
 
     @Override
     protected void onCleared() {
-        if (!compositeDisposable.isDisposed()) {
-            compositeDisposable.clear();
-        }
+        compositeDisposable.clear();
         super.onCleared();
     }
 }
